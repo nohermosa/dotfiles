@@ -1,0 +1,7 @@
+# ~/.config/starship.toml
+[python]
+disabled = true
+
+[cmd_duration]
+disabled = true
+
