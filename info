@@ -1,0 +1,11 @@
+#! /bin/bash
+
+dotfiles_dir="$HOME/dotfiles"
+file_count=$(find "$dotfiles_dir" | wc -l)
+today=$(date +%Y-%m-%d)
+
+echo "== dotfile count =="
+echo "User: $USER"
+echo "Date: $today"
+echo "Files: $file_count"
+echo "Folder: $dotfiles_dir"
