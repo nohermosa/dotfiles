@@ -1,7 +1,7 @@
 #! /bin/bash
 
 dotfiles_dir="$HOME/dotfiles"
-file_count=$(find "$dotfiles_dir" | wc -l)
+file_count=$(ls "$dotfiles_dir" | wc -l)
 today=$(date +%Y-%m-%d)
 
 echo "== dotfile count =="
