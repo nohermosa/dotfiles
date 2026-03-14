@@ -2,11 +2,28 @@
 
 # Description: Link dotfiles to home directory
 
-mkdir -p ~/.config
+dotlink="$HOME/dotfiles"
+destlink="$HOME"
 
-ln -sf ~/dotfiles/bashrc ~/.bashrc
-ln -sf ~/dotfiles/vimrc ~/.vimrc
-ln -sf ~/dotfiles/starship.toml ~/.config/starship.toml
-ln -sf ~/dotfiles/tmux ~/.tmux.conf
+link_dot_file() {
+    local src="$1"
+    local dest="$2"
+    ln -sf "$src" "$dest"
+    echo "Linked: $dest"
+}
 
-echo "Dotfiles linked!"
+mkdir -p "$destlink/.config"
+
+dotfiles=("bashrc" "vimrc" "starship" "tmux")
+
+for file in "${dotfiles[@]}"; do
+    if [ "$file" = "starship" ]; then
+        link_dot_file "$dotlink/$file.toml" "$destlink/.config/$file.toml"
+    elif [ "$file" = "tmux" ]; then
+        link_dot_file "$dotlink/$file" "$destlink/.$file.conf"
+    else
+        link_dot_file "$dotlink/$file" "$destlink/.$file"
+    fi
+done
+
+echo "Dotfiles linked successfully!"
