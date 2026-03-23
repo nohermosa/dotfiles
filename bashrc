@@ -156,7 +156,7 @@ webnotes3() {
 
 eval "$(starship init bash)" 
 export PATH="$HOME/.local/bin:$PATH"
-if [ -f ~/.env ]; then
+  if [ -f ~/.env ]; then
       export $(cat ~/.env | xargs)                                                                                                                                                                              
   fi
  hushnote() {
