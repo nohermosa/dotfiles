@@ -174,3 +174,5 @@ export PATH="$HOME/.local/bin:$PATH"
   }
 
   export RECORDINGS_DIR="/home/mike/Files/MeetingNotes"
+
+set -o vi  
