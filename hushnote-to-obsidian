@@ -1,0 +1,93 @@
+ #!/bin/bash
+
+  OBSIDIAN_VAULT="/home/mike/Files/Obsidian Vault"
+  MEETINGS_FOLDER="$OBSIDIAN_VAULT/Meetings"
+
+  mkdir -p "$MEETINGS_FOLDER"
+
+  # If folder is provided as argument, use it; otherwise find most recent
+  if [ -n "$1" ]; then
+      # Use the folder provided
+      meeting_path="$1"
+      if [ ! -d "$meeting_path" ]; then
+          echo "ERROR: Folder not found: $meeting_path"
+          exit 1
+      fi
+      # Find audio file in that folder
+      latest=$(find "$meeting_path" -type f \( -name "*.wav" -o -name "*.mp3" \) | head -1)
+  else
+      # Find most recent audio file
+      latest=$(find /home/mike/Files/MeetingNotes -type f \( -name "*.wav" -o -name "*.mp3" \) -printf '%T@ %p\n' 2>/dev/null | sort -rn | head -1 | cut -d' ' -f2-)
+  fi
+
+  if [ -z "$latest" ]; then
+      echo "ERROR: No audio files found"
+      exit 1
+  fi
+
+  base="${latest%.*}"
+
+  if [ ! -f "${base}_summary.md" ]; then
+      echo "ERROR: Summary not found for $base"
+      exit 1
+  fi
+
+  meeting_dir=$(dirname "$base")
+  date_folder=$(basename "$(dirname "$meeting_dir")")
+  meeting_date="${date_folder:0:4}-${date_folder:4:2}-${date_folder:6:2}"
+  meeting_date_underscore="${date_folder:0:4}_${date_folder:4:2}_${date_folder:6:2}"
+
+  summary_content=$(cat "${base}_summary.md" 2>/dev/null)
+  transcript_content=$(cat "${base}.txt" 2>/dev/null)
+  audio_file="$latest"
+
+  # Read title from metadata
+  title=""
+  metadata_file="${base}_metadata.json"
+  if [ -f "$metadata_file" ]; then
+      title=$(grep -oP '"title"\s*:\s*"\K[^"]+' "$metadata_file")
+  fi
+
+  # Create filename
+  if [ -z "$title" ]; then
+      note_filename="${meeting_date_underscore}.md"
+      display_title="Meeting - $meeting_date"
+  else
+      title_no_spaces=$(echo "$title" | sed 's/ //g')
+      note_filename="${meeting_date_underscore}-${title_no_spaces}.md"
+      display_title="$title"
+  fi
+
+  note_file="$MEETINGS_FOLDER/$note_filename"
+
+  # Clean up summary
+  summary_with_checkboxes=$(echo "$summary_content" | \
+      grep -v '^# Meeting Summary$' | \
+      grep -v '^### Meeting Summary$' | \
+      grep -v '```' | \
+      sed 's/- \*\*Task\/Action\*\*:/- [ ]/g')
+
+  {
+      echo "---"
+      echo "date: $meeting_date"
+      echo "---"
+      echo ""
+      echo "# $display_title"
+      echo ""
+      echo "[🎙️  Listen to Recording](file://$audio_file)"
+      echo ""
+      echo "## Summary"
+      echo "$summary_with_checkboxes"
+      echo ""
+      echo "<details>"
+      echo "<summary>Transcript</summary>"
+      echo ""
+      echo "$transcript_content"
+      echo ""
+      echo "</details>"
+      echo ""
+      echo "## Notes"
+      echo ""
+  } > "$note_file"
+
+  echo "[✓] Created: $note_filename"

@@ -14,7 +14,7 @@ link_dot_file() {
 
 mkdir -p "$destlink/.config"
 
-dotfiles=("bashrc" "vimrc" "starship" "tmux")
+dotfiles=("bashrc" "vimrc" "starship" "tmux" "hushnote-speaker")
 
 for file in "${dotfiles[@]}"; do
     if [ "$file" = "starship" ]; then

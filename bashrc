@@ -155,3 +155,22 @@ webnotes3() {
   }
 
 eval "$(starship init bash)" 
+export PATH="$HOME/.local/bin:$PATH"
+if [ -f ~/.env ]; then
+      export $(cat ~/.env | xargs)                                                                                                                                                                              
+  fi
+ hushnote() {
+      sudo pkill ollama 2>/dev/null
+      sleep 1
+
+      if [ "$1" = "speaker" ]; then
+          /home/mike/dotfiles/hushnote-speaker "$2"
+      else
+          /home/mike/hushnote/hushnote "$@"
+      fi
+
+      sleep 10  # Increased from 2 to 5 seconds
+      ~/dotfiles/hushnote-to-obsidian
+  }
+
+  export RECORDINGS_DIR="/home/mike/Files/MeetingNotes"

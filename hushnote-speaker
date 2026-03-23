@@ -1,0 +1,4 @@
+#!/bin/bash
+  speakers="${1:-2}"
+  cd ~/hushnote
+  ./hushnote full -m small -o qwen2.5-coder:14b -s "$speakers" --diarize
