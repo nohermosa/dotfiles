@@ -92,6 +92,12 @@ alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 
+# kubectl alias
+alias k='kubectl'
+source /etc/bash_completion # not needed on macos
+source <(kubectl completion bash)
+complete -o default -F __start_kubectl k
+
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
@@ -176,3 +182,9 @@ export PATH="$HOME/.local/bin:$PATH"
   export RECORDINGS_DIR="/home/mike/Files/MeetingNotes"
 
 set -o vi  
+
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv bash)"
+
+### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
+export PATH="/home/mike/.rd/bin:$PATH"
+### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
