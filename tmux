@@ -1,10 +1,10 @@
 set-option -g history-limit 25000
 
 # Enable mouse support
-  set -g mouse on
+set -g mouse on
 
 # vi for copy mode
-setw -g mode-keys vi
+set -g mode-keys vi
 
 #status bar
 set -g status-right "#(pomo)"
@@ -12,11 +12,10 @@ set -g status-style "fg=#665c54"
 set -g status-left-style "fg=#928374"
 
 set -g status-bg default
-set -g status-postion top
+set -g status-position top
 set -g status-interval 1
 set -g status-left ""
 
 #reload configuration
 bind-key -r r source-file ~/.tmux.conf
-
 
